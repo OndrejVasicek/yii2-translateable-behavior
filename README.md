@@ -1,3 +1,20 @@
+# Info about this fork
+
+This is a fork from the original `2amigos/yii2-translateable-behavior`, since the original repository is archived (read only) and doesn't accept any pull requests.
+
+There are no ambitions to continue the development, but I'll do some small updates here and there based on my own needs, so feel free to use it or contribute.
+
+If you want to install this fork, you have to add this code to your `composer.json` (the class has still the original namespace, so there is no need to refactor):
+
+```json
+"repositories": [
+    {
+        "type": "git",
+        "url": "https://github.com/OndrejVasicek/yii2-translateable-behavior.git"
+    }
+]
+```
+
 TranslateableBehavior for Yii2
 ==============================
 
