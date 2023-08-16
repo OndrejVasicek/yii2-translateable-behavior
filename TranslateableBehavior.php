@@ -1,28 +1,26 @@
 <?php
 /**
  * @copyright Copyright (c) 2013 2amigOS! Consulting Group LLC
- * @link http://2amigos.us
- * @license http://www.opensource.org/licenses/bsd-license.php New BSD License
+ * @link      http://2amigos.us
+ * @license   http://www.opensource.org/licenses/bsd-license.php New BSD License
  */
 
 namespace dosamigos\translateable;
 
 use Yii;
 use yii\base\Behavior;
-use yii\base\Event;
 use yii\db\ActiveRecord;
-use yii\helpers\ArrayHelper;
 
 /**
  * TranslateBehavior Behavior. Allows to maintain translations of model.
  *
- * @property string $language the language to use for reading and storing translations.
+ * @property string       $language         the language to use for reading and storing translations.
  * @property string|array $fallbackLanguage the language or list of languages to use in case a translation is not available.
  * @property ActiveRecord $owner
  *
- * @author Antonio Ramirez <amigo.cobos@gmail.com>
- * @link http://www.ramirezcobos.com/
- * @link http://www.2amigos.us/
+ * @author  Antonio Ramirez <amigo.cobos@gmail.com>
+ * @link    http://www.ramirezcobos.com/
+ * @link    http://www.2amigos.us/
  * @package dosamigos\translate
  */
 class TranslateableBehavior extends Behavior
@@ -112,6 +110,7 @@ class TranslateableBehavior extends Behavior
         return $events;
     }
 
+
     /**
      * Make [[$translationAttributes]] writable
      */
@@ -130,8 +129,10 @@ class TranslateableBehavior extends Behavior
         }
     }
 
+
     /**
      * Make [[$translationAttributes]] readable
+     *
      * @inheritdoc
      */
     public function __get($name)
@@ -147,10 +148,13 @@ class TranslateableBehavior extends Behavior
         return $this->getAttributeTranslation($name, $this->getLanguage())[0];
     }
 
+
     /**
      * Retrieve translation for an attribute.
+     *
      * @param string $attribute the attribute name.
-     * @param string $language the desired translation language.
+     * @param string $language  the desired translation language.
+     *
      * @return array first element is the translation, second element is the language.
      * Language may differ from `$language` when a fallback translation has been used.
      */
@@ -167,12 +171,15 @@ class TranslateableBehavior extends Behavior
                 return [$model->$attribute, $modelLanguage];
             }
             $language = $fallbackLanguage;
-        } while($model->$attribute === null);
+        } while ($model->$attribute === null);
+
         return [$model->$attribute, $modelLanguage];
     }
 
+
     /**
      * Expose [[$translationAttributes]] writable
+     *
      * @inheritdoc
      */
     public function canSetProperty($name, $checkVars = true)
@@ -180,14 +187,17 @@ class TranslateableBehavior extends Behavior
         return in_array($name, $this->translationAttributes, true) ? true : parent::canSetProperty($name, $checkVars);
     }
 
+
     /**
      * Expose [[$translationAttributes]] readable
+     *
      * @inheritdoc
      */
     public function canGetProperty($name, $checkVars = true)
     {
         return in_array($name, $this->translationAttributes, true) ? true : parent::canGetProperty($name, $checkVars);
     }
+
 
     /**
      * @param \yii\base\Event $event
@@ -198,6 +208,7 @@ class TranslateableBehavior extends Behavior
         $this->getTranslation($this->getLanguage());
     }
 
+
     /**
      * @param \yii\base\Event $event
      */
@@ -206,6 +217,7 @@ class TranslateableBehavior extends Behavior
         $this->saveTranslation();
     }
 
+
     /**
      * @param \yii\base\Event $event
      */
@@ -213,6 +225,7 @@ class TranslateableBehavior extends Behavior
     {
         $this->saveTranslation();
     }
+
 
     /**
      * @param \yii\base\ModelEvent $event
@@ -225,6 +238,7 @@ class TranslateableBehavior extends Behavior
             if ($count > 1) {
                 $event->isValid = false;
                 $event->handled = true;
+
                 return;
             }
         }
@@ -232,6 +246,7 @@ class TranslateableBehavior extends Behavior
             $translation->delete();
         }
     }
+
 
     /**
      * Sets current model's language
@@ -247,8 +262,10 @@ class TranslateableBehavior extends Behavior
         $this->_language = $value;
     }
 
+
     /**
      * Returns current models' language. If null, will return app's configured language.
+     *
      * @return string
      */
     public function getLanguage()
@@ -256,8 +273,10 @@ class TranslateableBehavior extends Behavior
         if ($this->_language === null) {
             $this->_language = strtolower(Yii::$app->language);
         }
+
         return $this->_language;
     }
+
 
     /**
      * Sets the model's fallback language.
@@ -275,8 +294,10 @@ class TranslateableBehavior extends Behavior
         $this->_fallbackLanguage = $value;
     }
 
+
     /**
      * Returns current models' fallback language. If null, will return app's configured source language.
+     *
      * @return string
      */
     public function getFallbackLanguage($forLanguage = null)
@@ -300,6 +321,7 @@ class TranslateableBehavior extends Behavior
             if ($forLanguage !== $fallbackLanguage) {
                 return $fallbackLanguage;
             }
+
             // when no fallback is available, use the first defined fallback
             return reset($this->_fallbackLanguage);
         }
@@ -309,8 +331,10 @@ class TranslateableBehavior extends Behavior
         if ($forLanguage !== $fallbackLanguage) {
             return $fallbackLanguage;
         }
+
         return $this->_fallbackLanguage;
     }
+
 
     /**
      * @return bool whether the current language has a native translation.
@@ -327,11 +351,14 @@ class TranslateableBehavior extends Behavior
         if (!isset($this->_models[$language])) {
             $this->_models[$language] = $this->loadTranslation($language);
         }
+
         return $this->_models[$language]->isNewRecord;
     }
 
+
     /**
      * Saves current translation model
+     *
      * @return bool
      */
     public function saveTranslation()
@@ -360,6 +387,7 @@ class TranslateableBehavior extends Behavior
         return $ret;
     }
 
+
     /**
      * Check whether translation model has relevant translation data.
      *
@@ -369,13 +397,14 @@ class TranslateableBehavior extends Behavior
      * This method is used to only store translations if they differ from the fallback.
      *
      * @param ActiveRecord $model
-     * @param string $language
+     * @param string       $language
+     *
      * @return bool whether a translation model contains relevant translation data.
      */
     private function modelEqualsFallbackTranslation($model, $language)
     {
         $fallbackLanguage = $this->getFallbackLanguage($language);
-        foreach($this->translationAttributes as $translationAttribute) {
+        foreach ($this->translationAttributes as $translationAttribute) {
             if (isset($model->$translationAttribute)) {
                 list($translation, $transLanguage) = $this->getAttributeTranslation($translationAttribute, $fallbackLanguage);
                 if ($transLanguage === $language || $model->$translationAttribute !== $translation) {
@@ -383,8 +412,10 @@ class TranslateableBehavior extends Behavior
                 }
             }
         }
+
         return true;
     }
+
 
     /**
      * Returns a related translation model
@@ -406,6 +437,7 @@ class TranslateableBehavior extends Behavior
         return $this->_models[$language];
     }
 
+
     /**
      * Returns already loaded translation models
      *
@@ -415,6 +447,7 @@ class TranslateableBehavior extends Behavior
     {
         return $this->_models;
     }
+
 
     /**
      * Loads all specified languages. For example:
@@ -436,6 +469,7 @@ class TranslateableBehavior extends Behavior
             $this->getTranslation($language);
         }
     }
+
 
     /**
      * Loads a specific translation model
@@ -473,6 +507,7 @@ class TranslateableBehavior extends Behavior
         return $translation;
     }
 
+
     /**
      * Populates already loaded translations
      */
@@ -490,5 +525,69 @@ class TranslateableBehavior extends Behavior
                 $this->_models[$model->getAttribute($this->languageField)] = $model;
             }
         }
+    }
+
+
+    /**
+     * Checks if any of the loaded translations has error
+     *
+     * Helpful after tabular saving.
+     */
+    public function hasErrors(): bool
+    {
+        foreach ($this->_models as $model) {
+            if ($model->hasErrors()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+
+    /**
+     * Collects all validation errors from the translation models
+     *
+     * Helpful after tabular saving.
+     * The format is:
+     * [
+     *      [language1-key] => [
+     *          'Fist error message',
+     *          'Second error message',
+     *      ]
+     *      [language2-key] => [
+     *           'Fist error message',
+     *      ]
+     * ]
+     */
+    public function getIndexedErrors(): array
+    {
+        $errors = [];
+        foreach ($this->_models as $language => $model) {
+            if ($model->hasErrors()) {
+                $errors[$language] = $model->getErrorSummary(true);
+            }
+        }
+
+        return $errors;
+    }
+
+
+    /**
+     * Collects all validation errors from the translation models
+     *
+     * Helpful after tabular saving.
+     * All the errors are in one-dimensional array.
+     */
+    public function getErrors(): array
+    {
+        $errors = [];
+        foreach ($this->_models as $model) {
+            if ($model->hasErrors()) {
+                $errors = array_merge($errors, $model->getErrorSummary(true));
+            }
+        }
+
+        return $errors;
     }
 } 
