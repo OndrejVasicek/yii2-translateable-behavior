@@ -407,6 +407,16 @@ class TranslateableBehavior extends Behavior
     }
 
     /**
+     * Returns already loaded translation models
+     *
+     * @return ActiveRecord[]
+     */
+    public function getLoadedTranslations(): array
+    {
+        return $this->_models;
+    }
+
+    /**
      * Loads all specified languages. For example:
      *
      * ```
