@@ -590,4 +590,41 @@ class TranslateableBehavior extends Behavior
 
         return $errors;
     }
+
+
+    /**
+     * When there is a unique composite index in the language table, the Gii generates a unique rule.
+     * This is good of course, but the  attributes of the rule are set to  ['language',  'another_column'].
+     * According to the docs: "only the first attribute without any previous errors will receive a new error message."
+     * In this case, "the first attribute" means the former according to the 'activeAttributes()' method.
+     * And it's always 'language' rather than any other column and even if you force to change the order of columns, you never know when you have to add some new column and the new column will be always behind the 'language' one.
+     *
+     * When you have a form for saving a translation, the 'language' attribute isn't part of the visible inputs and you want to show the error message on the 'another_column' input. In the showed scenario, there won't be any message error, because it's only shown for non present 'language' input.
+     *
+     * This helper method solves the issue and is able to modify the original rules and change all the ['language',  'another_column'] in unique rules to only ['another_column'] attribute.
+     *
+     * You still have to overwrite the rules in your SomeModelLang ActiveRecord like this:
+     *
+     * public function rules()
+     * {
+     *      return TranslateableBehavior::removeLanguageFromUniqueRules(parent::rules());
+     * }
+     *
+     * @see https://www.yiiframework.com/doc/guide/2.0/en/tutorial-core-validators#unique
+     */
+    public static function removeLanguageFromUniqueRules(array $rules, string $languageField = 'language'): array
+    {
+        foreach ($rules as $key => $item) {
+            if ($item[1] === 'unique'
+                and is_array($item[0])
+                and count($item[0]) > 1 // only when there is $languageField and some other attribute
+                and in_array($languageField, $item[0]) // only when there is actually the $languageField attribute
+            ) {
+                $languageKey = array_search($languageField, $item[0]);
+                unset($rules[$key][0][$languageKey]);
+            }
+        }
+
+        return $rules;
+    }
 } 
