@@ -1,4 +1,4 @@
-# Info about this fork
+# About this fork
 
 This is a fork from the original `2amigos/yii2-translateable-behavior`, since the original repository is archived (read only) and doesn't accept any pull requests.
 
@@ -14,6 +14,12 @@ If you want to install this fork, you have to add this code to your `composer.js
     }
 ]
 ```
+
+## Changes
+* new method `getIndexedErrors()` - array of all validation errors from all models indexed by the language
+* new method `getErrors()` - one dimensional array of all validation errors from all models
+* new method `hasErrors()` - checking, if any of the models as a validation error
+* new method `getLoadedTranslations()` - accessing all loaded language models
 
 TranslateableBehavior for Yii2
 ==============================
