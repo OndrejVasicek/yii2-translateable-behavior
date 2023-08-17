@@ -15,7 +15,8 @@ If you want to install this fork, you have to add this code to your `composer.js
 ]
 ```
 
-## Changes
+## Changes (sorted from newer to older)
+* new helper method `removeLanguageFromUniqueRules()` - can modify language model rules to properly show errors in form based only on Gii generated rules
 * new method `getIndexedErrors()` - array of all validation errors from all models indexed by the language
 * new method `getErrors()` - one dimensional array of all validation errors from all models
 * new method `hasErrors()` - checking, if any of the models as a validation error
