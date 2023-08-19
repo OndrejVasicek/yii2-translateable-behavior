@@ -1,7 +1,12 @@
 {
     "name": "2amigos/yii2-translateable-behavior",
     "description": "ActiveRecord attributes translations for Yii2.",
-    "keywords": ["extension", "behavior", "translation", "yii"],
+    "keywords": [
+        "extension",
+        "behavior",
+        "translation",
+        "yii"
+    ],
     "type": "yii2-extension",
     "license": "BSD-3-Clause",
     "authors": [
@@ -12,6 +17,7 @@
         }
     ],
     "require": {
+        "php": ">=7.4",
         "yiisoft/yii2": "*"
     },
     "require-dev": {
@@ -21,5 +27,20 @@
         "psr-4": {
             "dosamigos\\translateable\\": ""
         }
-    }
+    },
+    "config": {
+        "process-timeout": 1800,
+        "fxp-asset": {
+            "enabled": false
+        },
+        "allow-plugins": {
+            "yiisoft/yii2-composer": true
+        }
+    },
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://asset-packagist.org"
+        }
+    ]
 }
