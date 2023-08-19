@@ -10,6 +10,7 @@ namespace dosamigos\translateable;
 use Yii;
 use yii\base\Behavior;
 use yii\db\ActiveRecord;
+use yii\helpers\Html;
 
 /**
  * TranslateBehavior Behavior. Allows to maintain translations of model.
@@ -626,5 +627,26 @@ class TranslateableBehavior extends Behavior
         }
 
         return $rules;
+    }
+
+
+    /**
+     * Creates an array of options for ActiveField to set proper HTML attributes for inputs and labels.
+     *
+     * It's helpful for tabular input, where there are multiple inputs for the same attribute but different language.
+     * It solves a situation, where the activeField is set to language model (to properly load the data) but the input name and id has to be specifically set to allow the behavior save the data.
+     */
+    public function formFieldOptions(string $attribute): array
+    {
+        $attribute .= '[translations][' . $this->language . ']';
+        $id = Html::getInputId($this->owner, $attribute);
+
+        return [
+            'inputOptions' => [
+                'name' => Html::getInputName($this->owner, $attribute),
+                'id' => $id,
+            ],
+            'labelOptions' => ['for' => $id],
+        ];
     }
 } 
